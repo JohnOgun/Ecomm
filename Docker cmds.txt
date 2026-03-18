@@ -1,5 +1,0 @@
-To run the Docker build need to use the following in the PowerShell
-PS C:\Ecomm> docker compose up -d
-
-TO update your database using the migrations stored in the Infrastructure project, while running the API project as the startup project.
-dotnet ef database update -s API -p Infrastructure
