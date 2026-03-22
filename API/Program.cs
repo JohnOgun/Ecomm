@@ -1,3 +1,4 @@
+using Core.Interfaces;
 using Infrastructure.Data;
 // This lets us use the StoreContext class (your database context).
 
@@ -21,13 +22,15 @@ builder.Services.AddDbContext<StoreContext>(opt =>
     // This registers your database context (StoreContext)
     // so it can be injected into controllers.
 
-    opt.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    );
+    opt.UseSqlServer( builder.Configuration.GetConnectionString("DefaultConnection"));
     // This tells EF Core to use SQL Server.
     // It gets the connection string named "DefaultConnection"
     // from appsettings.json.
+
+
 });
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 // This builds the app using everything configured above.
@@ -35,6 +38,24 @@ var app = builder.Build();
 app.MapControllers();
 // This connects your controllers to the routing system.
 // It enables routes like: api/products
+
+
+try
+{
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<StoreContext>();
+    await context.Database.MigrateAsync();
+    await StoreContextSeed.SeedAsync(context);
+}
+
+catch (Exception ex)
+{
+    Console.WriteLine(ex);
+    throw;
+}
+
+
 
 app.Run();
 // This starts the application.

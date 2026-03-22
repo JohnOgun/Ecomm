@@ -24,7 +24,7 @@ namespace Core.Entities
         public decimal Price { get; set; }
         // Stores the product price.
 
-        public required string pictureUrl { get; set; }
+        public required string PictureUrl { get; set; }
         // Required image URL for the product.
         // Must be provided when creating the object.
 
